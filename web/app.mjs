@@ -1,37 +1,21 @@
-import { cleanLines } from './model.mjs';
-const input = document.querySelector('#input');
-const output = document.querySelector('#output');
-const status = document.querySelector('#status');
-const copy = document.querySelector('#copy');
-function update() {
-  const result = cleanLines(input.value);
-  output.value = result.text;
-  status.textContent = `${result.count} unique ${result.count === 1 ? 'line' : 'lines'}; ${result.removed} ${result.removed === 1 ? 'duplicate' : 'duplicates'} removed.`;
-  copy.disabled = result.count === 0;
-}
-input.addEventListener('input', update);
-document.querySelector('#sample').addEventListener('click', () => {
-  input.value = '  Halifax\nLangley\nHalifax\n\nVancouver  ';
-  update();
+import { el, fmt, put, setOptions, showLink, start, table } from './ui.mjs';
+import { change, display } from './model.mjs';
+start(data => {
+  const sites = Object.keys(data.sites);
+  setOptions('first', sites, sites[0]);
+  setOptions('second', sites, sites[1]);
+  setOptions('year', [...data.years].reverse(), data.end);
+  function render() {
+    const a = el('first').value, b = el('second').value, year = el('year').value;
+    const va = data.sites[a][year], vb = data.sites[b][year], diff = change(va, vb);
+    put('label1', a); put('label2', b);
+    put('value1', display(va)); put('value2', display(vb));
+    put('finding', diff === null ? 'A comparison requires a published number for each place.' :
+      diff === 0 ? 'Both selections have the same recorded attendance.' :
+      (diff > 0 ? b : a) + ' recorded ' + fmt(Math.abs(diff)) + ' more visits in ' + year + '.');
+    table('history', ['Fiscal year', a, b], [...data.years].reverse().map(y =>
+      [y, display(data.sites[a][y]), display(data.sites[b][y])]));
+    showLink('source', data.sources[year]);
+  }
+  el('explore').addEventListener('change', render); render();
 });
-document.querySelector('#clear').addEventListener('click', () => {
-  input.value = '';
-  update();
-  input.focus();
-});
-if (navigator.clipboard && window.isSecureContext) {
-  copy.hidden = false;
-  copy.disabled = true;
-  copy.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(output.value);
-      status.textContent = 'Result copied.';
-    } catch {
-      output.focus();
-      output.select();
-      status.textContent = 'Copy was unavailable. The result is selected so you can copy it manually.';
-    }
-  });
-}
-// Namespace future preference storage as coolcode:<tool-id>:<key>.
-// Do not persist pasted text or uploads by default.

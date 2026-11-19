@@ -1,16 +1,46 @@
 {
-  "id": "coolcode-tool-template",
-  "title": "CoolCode Tool Starter",
-  "description": "A browser-only example that trims lines and removes exact duplicates.",
-  "category": "security",
-  "tags": ["text", "lines", "duplicates"],
-  "icon": "scan-search",
-  "url": "/coolcode-tool-template/",
-  "source": "https://github.com/jsdyer/coolcode-tool-template",
+  "id": "parkvisits",
+  "title": "Park Visits",
+  "description": "Compare annual attendance at Fort Langley, Halifax Citadel and ten other Parks Canada places.",
+  "category": "explorers",
+  "tags": [
+    "places",
+    "parks",
+    "attendance"
+  ],
+  "icon": "landmark",
+  "url": "/parkvisits/",
+  "source": "https://github.com/jsdyer/parkvisits",
   "hosting": "project",
   "access": "browser",
   "data_info": {
-    "mode": "local",
-    "detail": "The browser reads the text you paste and compares its lines."
+    "mode": "snapshot",
+    "detail": "Parks Canada publishes fiscal-year visits for each place, including reporting gaps and temporary closures.",
+    "cadence": "Monthly",
+    "probes": [
+      {
+        "label": "Data retrieved",
+        "url": "https://coolcode.ca/parkvisits/data/edition.json",
+        "path": [
+          "retrieved"
+        ],
+        "count_at": {
+          "path": [
+            "count"
+          ],
+          "unit": "places"
+        }
+      },
+      {
+        "label": "Coverage",
+        "url": "https://coolcode.ca/parkvisits/data/edition.json",
+        "path": [
+          "coverageStart"
+        ],
+        "end_path": [
+          "coverageEnd"
+        ]
+      }
+    ]
   }
 }
