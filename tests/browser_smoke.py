@@ -34,6 +34,10 @@ def main():
                 assert page.locator("#value1").inner_text() == "98,327"
                 page.locator("#year").select_option("2024-25")
                 assert page.locator("#history tbody tr").count() >= 25
+                assert page.locator("#first option").count() > 100
+                page.locator("#first").select_option("Ivvavik National Park")
+                assert page.locator("#trend path").count() == 2
+                assert page.locator(".year-bar").count() == 2
                 assert "2024-25" in page.locator("#finding").inner_text()
                 page.screenshot(path=str(screenshots / "desktop.png"), full_page=True)
                 page.set_viewport_size({"width": 390, "height": 844})

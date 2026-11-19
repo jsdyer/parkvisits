@@ -1,9 +1,10 @@
+import { plotAttendance } from './charts.mjs';
 import { el, fmt, put, setOptions, showLink, start, table } from './ui.mjs';
 import { change, display } from './model.mjs';
 start(data => {
-  const sites = Object.keys(data.sites);
-  setOptions('first', sites, sites[0]);
-  setOptions('second', sites, sites[1]);
+  const sites = Object.keys(data.sites).sort((a,b) => a.localeCompare(b,'en-CA'));
+  setOptions('first', sites, 'Fort Langley National Historic Site');
+  setOptions('second', sites, 'Halifax Citadel National Historic Site');
   setOptions('year', [...data.years].reverse(), data.end);
   function render() {
     const a = el('first').value, b = el('second').value, year = el('year').value;
@@ -16,6 +17,10 @@ start(data => {
     table('history', ['Fiscal year', a, b], [...data.years].reverse().map(y =>
       [y, display(data.sites[a][y]), display(data.sites[b][y])]));
     showLink('source', data.sources[year]);
+    put('bar-title', 'Visits in '+year);
+    plotAttendance(data, [a,b], year);
   }
-  el('explore').addEventListener('change', render); render();
+  el('explore').addEventListener('change', render);
+  new ResizeObserver(render).observe(el('trend').parentElement);
+  render();
 });

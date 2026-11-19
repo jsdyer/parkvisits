@@ -7,12 +7,6 @@ from urllib.parse import urlencode, urljoin, urlsplit
 from source_io import EDITION, fetch, publish
 
 API = "https://open.canada.ca/data/api/3/action/package_search?"
-SITES = ["Fort Langley National Historic Site", "Halifax Citadel National Historic Site",
-         "Fort Rodd Hill/Fisgard Lighthouse National Historic Sites", "Fort Anne National Historic Site",
-         "Fortress of Louisbourg National Historic Site", "Pacific Rim National Park Reserve",
-         "Cape Breton Highlands National Park", "Kejimkujik National Park and Historic Site",
-         "Fundy National Park", "Kouchibouguac National Park", "Prince Edward Island National Park",
-         "Banff National Park"]
 
 
 def parse_resource(raw):
@@ -26,7 +20,7 @@ def parse_resource(raw):
         raise ValueError("Unrecognized attendance headers")
     found = {}
     for row in reader:
-        if not row or row[0].strip() not in SITES:
+        if not row or not row[0].strip() or re.match(r"^(UR|TC)\s*=", row[0].strip()):
             continue
         if len(row) != len(columns) + 1 or row[0].strip() in found:
             raise ValueError(f"Unexpected shape or repeated site: {row[0]}")
@@ -37,8 +31,8 @@ def parse_resource(raw):
                 raise ValueError(f"Review attendance code {value!r}")
             values[col[1]] = int(value) if value.isdigit() else value or "Blank"
         found[row[0].strip()] = values
-    if set(found) != set(SITES):
-        raise ValueError(f"Review site name changes: {set(SITES) - set(found)}")
+    if len(found) < 100 or 'Banff National Park' not in found:
+        raise ValueError('Attendance release appears incomplete')
     return found
 
 
@@ -46,7 +40,7 @@ def refresh():
     index = json.loads(fetch(API + urlencode({"q": 'title:"Parks Canada attendance"', "rows": 100})))["result"]
     if index["count"] > len(index["results"]):
         raise ValueError("Paginate catalogue before refreshing")
-    sites = {s: {} for s in SITES}
+    sites = {}
     sources = {}
     for release in index["results"]:
         for resource in release["resources"]:
@@ -56,7 +50,7 @@ def refresh():
                 continue
             records = parse_resource(fetch(url))
             for site, values in records.items():
-                if sites[site].keys() & values.keys():
+                if sites.setdefault(site, {}).keys() & values.keys():
                     raise ValueError("Overlapping fiscal years require review")
                 sites[site].update(values)
             for year in next(iter(records.values())):

@@ -1,7 +1,7 @@
 {
   "id": "parkvisits",
   "title": "Park Visits",
-  "description": "Compare annual attendance at Fort Langley, Halifax Citadel and ten other Parks Canada places.",
+  "description": "Compare annual visits at Parks Canada places across the country using trend lines and fiscal-year comparisons.",
   "category": "explorers",
   "tags": [
     "places",

@@ -1,16 +1,16 @@
 # Park Visits
 
-Compare annual attendance at Fort Langley, Halifax Citadel and ten other Parks Canada places. [Open the tool](https://coolcode.ca/parkvisits/).
+Compare annual attendance at national parks, marine parks and historic sites across Canada. [Open the tool](https://coolcode.ca/parkvisits/).
 
 <!-- coolcode:guide -->
-Start with Fort Langley and Halifax Citadel, pick a fiscal year, then compare both places across the full table. Counts represent visits and can include repeat visitors. The twelve-place selection also covers BC, Nova Scotia, New Brunswick, PEI and Alberta.
+Start with Fort Langley and Halifax Citadel, pick a fiscal year, then compare their trend lines, year bars and full annual table. Counts represent visits and can include repeat visitors. Try Jasper and Gros Morne, or the northern parks Aulavik and Ivvavik.
 <!-- /coolcode:guide -->
 
 ## Sources and interpretation
 
 Parks Canada reports visits for each April–March fiscal year. A person can visit more than once. Facilities differ in how visitors reach them and how attendance is estimated. UR means unable to report, TC means temporarily closed, and a published zero stays zero. The source gives no cause for an individual zero.
 
-The refresh discovers English attendance CSVs in the Government of Canada catalogue, including the historical multi-year release. It matches twelve place names exactly, verifies column labels and keeps the release URL for every year. Missing years, unknown symbols, unexpected name changes and overlapping releases stop publication. Differences require numeric values on both sides. Zeros are displayed as published, including in years where other places have unavailable figures.
+The refresh discovers English attendance CSVs in the Government of Canada catalogue, including the historical multi-year release. It preserves each place name exactly as published, verifies column labels and keeps the release URL for every year. Missing release years, unknown symbols and overlapping releases stop publication. Distinct published names have separate entries. A place absent from a release displays as unavailable. Differences require numeric values on both sides. Zeros are displayed as published, including in years where other places have unavailable figures.
 
 [Parks Canada CSV for this year](https://open.canada.ca/data/en/dataset/1e2bd6b2-d6c7-415b-8c95-f5f6b2459759). 
 
